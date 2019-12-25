@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         return answerService.getAnswer().execute()
     }
 
-    private fun cahceAnswer(answer: Answer) {
+    private fun cacheAnswer(answer: Answer) {
         val sharedPrefrences = getSharedPreferences("egDroidArch", Context.MODE_PRIVATE)
         sharedPrefrences.edit().apply {
             putString(YES_KEY, answer.imageYes)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun checkCahedAnswer(): Answer? {
+    private fun checkCachedAnswer(): Answer? {
         val sharedPrefrences = getSharedPreferences("egDroidArch", Context.MODE_PRIVATE)
         return if (sharedPrefrences.getString(YES_KEY, null) == null ||
             sharedPrefrences.getString(NO_KEY, null) == null
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun answerQuestion(isYes: Boolean) {
-        val cachedAnswer = checkCahedAnswer()
+        val cachedAnswer = checkCachedAnswer()
         if (cachedAnswer != null) {
             matchAnswers(isYes, cachedAnswer)
         } else {
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             if (remoteAnswer == null)
                 Toast.makeText(this, "error getting answers", Toast.LENGTH_LONG).show()
             else {
-                cahceAnswer(remoteAnswer)
+                cacheAnswer(remoteAnswer)
                 matchAnswers(isYes, remoteAnswer)
             }
 
