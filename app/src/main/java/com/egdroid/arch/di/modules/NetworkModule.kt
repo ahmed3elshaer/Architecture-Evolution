@@ -6,7 +6,7 @@
  *
  */
 
-package com.egdroid.arch.di
+package com.egdroid.arch.di.modules
 
 import dagger.Module
 import dagger.Provides

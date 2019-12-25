@@ -6,9 +6,10 @@
  *
  */
 
-package com.egdroid.arch.di
+package com.egdroid.arch.di.modules
 
 
+import com.egdroid.arch.di.modules.AnswersModule
 import com.egdroid.arch.main.MainActivity
 import dagger.Module
 import dagger.android.AndroidInjectionModule
@@ -17,7 +18,6 @@ import dagger.android.ContributesAndroidInjector
 @Module(includes = [AndroidInjectionModule::class])
 abstract class BuilderModule {
 
-    @AppComponent.PerActivity
     @ContributesAndroidInjector(modules = [AnswersModule::class])
     internal abstract fun bindMainActivity(): MainActivity
 

@@ -46,6 +46,11 @@ dependencies {
     implementation Dagger.android_support
     kapt Dagger.compiler
     kapt Dagger.support_compiler
+    implementation Lifecycle.viewmodel
+    implementation Lifecycle.viewmodelKtx
+    implementation Lifecycle.livedata
+    implementation Lifecycle.lifecycleKtx
+    kapt Lifecycle.lifecycleCompiler
 
 
 }

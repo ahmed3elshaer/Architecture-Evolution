@@ -6,7 +6,7 @@
  *
  */
 
-package com.egdroid.arch.di
+package com.egdroid.arch.di.modules
 
 import android.app.Application
 import android.content.Context
