@@ -9,7 +9,7 @@
 package com.egdroid.arch.di.modules
 
 import com.egdroid.arch.model.AnswerAPI
-import com.egdroid.arch.model.AnswersRepository
+import com.egdroid.arch.main.AnswersRepository
 import com.egdroid.arch.model.SharedPrefWrapper
 import dagger.Module
 import dagger.Provides

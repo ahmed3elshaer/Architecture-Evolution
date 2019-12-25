@@ -8,12 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.egdroid.arch.R
-import com.egdroid.arch.model.Answer
-import com.egdroid.arch.model.AnswersRepository
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
