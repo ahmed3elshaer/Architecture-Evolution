@@ -1,61 +1,27 @@
 package com.egdroid.arch
 
-import android.content.Context
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.egdroid.arch.model.Answer
-import com.egdroid.arch.model.AnswerAPI
+import com.egdroid.arch.model.AnswersRepository
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import retrofit2.Response
-import retrofit2.Retrofit
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var retrofit: Retrofit
+class MainActivity : DaggerAppCompatActivity() {
+    @Inject
+    lateinit var answersRepository: AnswersRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setupNetwork()
         handleChoice()
     }
 
-    private fun setupNetwork() {
-        retrofit = Retrofit.Builder()
-            .baseUrl("https://someWebService.com")
-            .build()
-    }
-
-    private fun getRemoteAnswer(): Response<Answer> {
-        val answerService = retrofit.create(AnswerAPI::class.java)
-        return answerService.getAnswer().execute()
-    }
-
-    private fun cacheAnswer(answer: Answer) {
-        val sharedPrefrences = getSharedPreferences("egDroidArch", Context.MODE_PRIVATE)
-        sharedPrefrences.edit().apply {
-            putString(YES_KEY, answer.imageYes)
-            putString(NO_KEY, answer.imageNo)
-        }.apply()
-
-    }
-
-    private fun checkCachedAnswer(): Answer? {
-        val sharedPrefrences = getSharedPreferences("egDroidArch", Context.MODE_PRIVATE)
-        return if (sharedPrefrences.getString(YES_KEY, null) == null ||
-            sharedPrefrences.getString(NO_KEY, null) == null
-        )
-            null
-        else
-            Answer(
-                sharedPrefrences.getString(YES_KEY, null)!!,
-                sharedPrefrences.getString(NO_KEY, null)!!
-            )
-
-    }
 
     private fun renderAnswer(image: String) {
         Glide.with(this).load(image).into(image_result)
@@ -73,17 +39,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun answerQuestion(isYes: Boolean) {
-        val cachedAnswer = checkCachedAnswer()
+        val cachedAnswer = answersRepository.checkCachedAnswer()
         if (cachedAnswer != null) {
             matchAnswers(isYes, cachedAnswer)
         } else {
             doAsync {
-                val remoteAnswer = getRemoteAnswer().body()
+                val remoteAnswer = answersRepository.getRemoteAnswer().body()
                 uiThread {
                     if (remoteAnswer == null)
-                        Toast.makeText(this@MainActivity, "error getting answers", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "error getting answers",
+                            Toast.LENGTH_LONG
+                        ).show()
                     else {
-                        cacheAnswer(remoteAnswer)
+                        answersRepository.cacheAnswer(remoteAnswer)
                         matchAnswers(isYes, remoteAnswer)
                     }
                 }
