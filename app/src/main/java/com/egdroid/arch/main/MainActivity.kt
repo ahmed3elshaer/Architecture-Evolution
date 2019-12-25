@@ -27,17 +27,12 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProviders.of(this, viewModelProvider).get(MainViewModel::class.java)
 
-        viewModel.answerImage.observe(this, Observer { image ->
-            renderAnswer(image)
+        viewModel.viewState.observe(this, Observer { state ->
+            renderAnswer(state.onAnswer)
+            renderLoading(state.isLoading)
+            renderError(state.onError)
         })
 
-        viewModel.loading.observe(this, Observer { isLoading ->
-            renderLoading(isLoading)
-        })
-
-        viewModel.error.observe(this, Observer { error ->
-            renderError(error)
-        })
         handleChoice()
     }
 

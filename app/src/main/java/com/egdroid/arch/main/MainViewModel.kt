@@ -13,23 +13,18 @@ class MainViewModel @Inject constructor(
     private val answersRepository: AnswersRepository
 ) : ViewModel() {
 
-    private val answerImageImpl: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
+    private val viewStateImpl: MutableLiveData<MainViewSate> by lazy {
+        MutableLiveData<MainViewSate>()
     }
-    val answerImage: LiveData<String> = answerImageImpl
+    val viewState: LiveData<MainViewSate> = viewStateImpl
 
-    private val errorImpl: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
+    init {
+        viewStateImpl.value = MainViewSate()
     }
-    val error: LiveData<String> = errorImpl
 
-    private val loadingImpl: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-    val loading: LiveData<Boolean> = loadingImpl
 
     fun handleChoice(isYes: Boolean) {
-        loadingImpl.value = true
+        postValue(previousValue().copy(isLoading = true))
         val cachedAnswer = answersRepository.checkCachedAnswer()
         if (cachedAnswer != null) {
             matchAnswers(isYes, cachedAnswer)
@@ -38,8 +33,12 @@ class MainViewModel @Inject constructor(
                 val remoteAnswer = answersRepository.getRemoteAnswer().body()
                 uiThread {
                     if (remoteAnswer == null) {
-                        errorImpl.value = "error getting answers"
-                        loadingImpl.value = false
+                        postValue(
+                            previousValue().copy(
+                                onError = "error getting answers",
+                                isLoading = false
+                            )
+                        )
                     } else {
                         answersRepository.cacheAnswer(remoteAnswer)
                         matchAnswers(isYes, remoteAnswer)
@@ -53,13 +52,28 @@ class MainViewModel @Inject constructor(
 
     private fun matchAnswers(isYes: Boolean, answer: Answer) {
         if (isYes)
-            answerImageImpl.value = answer.imageYes
+            postValue(
+                previousValue().copy(
+                    onAnswer = answer.imageYes,
+                    isLoading = true,
+                    onError = ""
+                )
+            )
         else
-            answerImageImpl.value = answer.imageNo
-
-        errorImpl.value = ""
-        loadingImpl.value = false
+            postValue(
+                previousValue().copy(
+                    onAnswer = answer.imageNo,
+                    isLoading = true,
+                    onError = ""
+                )
+            )
     }
+
+    fun postValue(mainViewSate: MainViewSate) {
+        viewStateImpl.value = mainViewSate
+    }
+
+    fun previousValue() = viewStateImpl.value!!
 
 
 }
