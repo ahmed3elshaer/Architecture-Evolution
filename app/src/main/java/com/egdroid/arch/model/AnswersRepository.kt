@@ -1,6 +1,6 @@
 package com.egdroid.arch.model
 
-import com.egdroid.arch.MainActivity
+import com.egdroid.arch.main.MainActivity
 import retrofit2.Response
 import javax.inject.Inject
 

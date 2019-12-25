@@ -12,6 +12,7 @@ import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
+import javax.inject.Scope
 import javax.inject.Singleton
 
 @Component(
@@ -31,4 +32,8 @@ interface AppComponent {
     }
 
     fun inject(app: Application)
+
+    @Scope
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class PerActivity
 }
