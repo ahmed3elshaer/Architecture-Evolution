@@ -1,8 +1,8 @@
-package com.egdroid.arch
+package com.egdroid.arch.model
 
+import com.egdroid.arch.model.Answer
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Query
 
 interface AnswerAPI {
     @GET("/answer")

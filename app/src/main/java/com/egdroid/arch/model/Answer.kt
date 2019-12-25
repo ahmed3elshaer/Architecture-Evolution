@@ -1,4 +1,4 @@
-package com.egdroid.arch
+package com.egdroid.arch.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

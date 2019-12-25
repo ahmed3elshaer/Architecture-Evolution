@@ -6,7 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.egdroid.arch.model.Answer
+import com.egdroid.arch.model.AnswerAPI
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import retrofit2.Response
 import retrofit2.Retrofit
 
@@ -73,13 +77,18 @@ class MainActivity : AppCompatActivity() {
         if (cachedAnswer != null) {
             matchAnswers(isYes, cachedAnswer)
         } else {
-            val remoteAnswer = getRemoteAnswer().body()
-            if (remoteAnswer == null)
-                Toast.makeText(this, "error getting answers", Toast.LENGTH_LONG).show()
-            else {
-                cacheAnswer(remoteAnswer)
-                matchAnswers(isYes, remoteAnswer)
+            doAsync {
+                val remoteAnswer = getRemoteAnswer().body()
+                uiThread {
+                    if (remoteAnswer == null)
+                        Toast.makeText(this@MainActivity, "error getting answers", Toast.LENGTH_LONG).show()
+                    else {
+                        cacheAnswer(remoteAnswer)
+                        matchAnswers(isYes, remoteAnswer)
+                    }
+                }
             }
+
 
         }
     }

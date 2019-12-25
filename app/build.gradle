@@ -41,5 +41,11 @@ dependencies {
     implementation Moshi.moshi
     implementation Moshi.kotlin
     implementation Moshi.retrofitConverter
+    implementation Dagger.runtime
+    implementation Dagger.android
+    implementation Dagger.android_support
+    kapt Dagger.compiler
+    kapt Dagger.support_compiler
+
 
 }
